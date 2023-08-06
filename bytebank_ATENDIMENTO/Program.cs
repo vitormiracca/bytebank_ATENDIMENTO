@@ -1,10 +1,11 @@
 ﻿using bytebank.Modelos.Conta;
+using bytebank_ATENDIMENTO.bytebank.Exceptions;
 using bytebank_ATENDIMENTO.bytebank.Util;
 using System.Collections;
 
 Console.WriteLine("Boas Vindas ao ByteBank, Atendimento.");
 
-#region
+#region Iniciando em Arrays
 
 void TestaArrayInt()
 {
@@ -121,17 +122,74 @@ void TestaArrayContas()
 //TestaArrayContas();
 
 #endregion
+#region Brincar de Listas:
 
-ArrayList _listaDeContas = new ArrayList();
+//List<string> nomesDosEscolhidos = new List<string>()
+//{
+//    "Bruce Wayne",
+//    "Carlos Vilagran",
+//    "Richard Grayson",
+//    "Bob Kane",
+//    "Will Farrel",
+//    "Lois Lane",
+//    "General Welling",
+//    "Perla Letícia",
+//    "Uxas",
+//    "Diana Prince",
+//    "Elisabeth Romanova",
+//    "Anakin Wayne"
+//};
+
+//static bool BuscaNome(List<string> lista, string nome)
+//{
+//    if (lista.Contains(nome))
+//    {
+//        return true;
+//    }
+//    return false;
+//}
+
+//static IList NomesEcontrados(List<string> lista, string[] nomes)
+//{
+//    List<string> nomesEncontrados = new List<string>();
+
+//    foreach (string nome in nomes)
+//    {
+//        if (BuscaNome(lista, nome))
+//        {
+//            nomesEncontrados.Add(nome);
+//        }
+//    }
+
+//    return nomesEncontrados;
+//}
+
+//string[] nomesABuscar = new string[] { "Bruce Wayne", "Vitor Miracca", "Diana Prince", "Anakin Wayne", "Valéria" };
+
+//var novosNomes = NomesEcontrados(nomesDosEscolhidos, nomesABuscar);
+//foreach (var nome in novosNomes)
+//{
+//    Console.WriteLine(nome);
+//}
+#endregion
+
+List<ContaCorrente> _listaDeContas = new List<ContaCorrente>()
+{
+    new ContaCorrente(79, "257819-B"){Saldo = 250900.00},
+    new ContaCorrente(32, "504328-A")
+};
+
 AtendimentoCliente();
 
 void AtendimentoCliente()
 {
-    char opcao = 'A';
-    while (opcao!='0')
+    try
     {
-        Console.Clear();
-        Console.WriteLine($@"
+        char opcao = 'A';
+        while (opcao != '0')
+        {
+            Console.Clear();
+            Console.WriteLine($@"
 ####################################
 #       Atendimento ByteBank       #
 #                                  #
@@ -148,22 +206,36 @@ void AtendimentoCliente()
 
         ");
 
-        Console.Write("- Digite a opção desejada: ");
-        opcao = Console.ReadLine()[0];
-        switch (opcao)
-        {
-            case '1':
-                CadastrarConta();
-                break;
+            Console.Write("- Digite a opção desejada: ");
+            try
+            {
+                opcao = Console.ReadLine()[0];
 
-            case '2':
-                ListarContas();
-                break;
+            }
+            catch (Exception excecao)
+            {
+                throw new ByteBankException(excecao.Message);
+            }
 
-            default:
-                Console.WriteLine("Opcao não implementada.");
-                break;
+            switch (opcao)
+            {
+                case '1':
+                    CadastrarConta();
+                    break;
+
+                case '2':
+                    ListarContas();
+                    break;
+
+                default:
+                    Console.WriteLine("Opcao não implementada.");
+                    break;
+            }
         }
+    }
+    catch (ByteBankException excecao)
+    {
+        Console.WriteLine($"{excecao.Message}");
     }
 }
 
@@ -176,6 +248,7 @@ void CadastrarConta()
     Console.WriteLine("");
     Console.WriteLine("=== Preencha os dados solicitados ===");
     Console.WriteLine("");
+    
     Console.Write("- Número da Conta: ");
     string numeroConta = Console.ReadLine();
 
@@ -229,6 +302,7 @@ void ListarContas()
     {
         Console.WriteLine("");
         item.DetalhesConta();
-        Console.ReadKey();
     }
+    Console.ReadKey();
 }
+
