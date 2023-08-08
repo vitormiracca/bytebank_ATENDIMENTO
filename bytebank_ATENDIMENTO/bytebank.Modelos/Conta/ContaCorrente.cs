@@ -1,11 +1,19 @@
 ﻿namespace bytebank.Modelos.Conta
 {
-	public class ContaCorrente
+	public class ContaCorrente : IComparable<ContaCorrente>
 	{
         public ContaCorrente(int numero_agencia, string conta)
         {
             Numero_agencia = numero_agencia;
 			Conta = conta;
+            Titular = new Cliente();
+            TotalDeContasCriadas++;
+        }
+
+        public ContaCorrente(int numero_agencia)
+        {
+            Numero_agencia = numero_agencia;
+			Conta = Guid.NewGuid().ToString().Substring(0, 8);
             Titular = new Cliente();
             TotalDeContasCriadas++;
         }
@@ -105,18 +113,30 @@
 			return $"===  DADOS DA CONTA  ===\n" +
 				   $"- Nº da Conta (Nº Agencia): {this.Conta} ({this.Numero_agencia})\n" +
 				   $"- Titular da Conta: {this.Titular.Nome} ({this.Titular.Cpf}) \n" +
-				   $"- Saldo Atual: {this.saldo} \n" +
-				   $"- Profissão do Titular: { this.Titular.Profissao}";
+				   $"- Saldo Atual: {this.saldo} \n";
 		}
+
+        public int CompareTo(ContaCorrente? outro)
+        {
+            if (outro == null)
+			{
+				return 1;
+			}
+			else
+			{
+				return this.Numero_agencia.CompareTo(outro.Numero_agencia);
+			}
+        }
 
 		public void DetalhesConta()
 		{
-            Console.WriteLine($"===  DADOS DA CONTA  ===\n" +
-							$"- Nº da Conta (Nº Agencia): {this.Conta} ({this.Numero_agencia})\n" +
-							$"- Titular da Conta: {this.Titular.Nome} ({this.Titular.Cpf}) \n" +
-							$"- Saldo Atual: {this.saldo} \n" +
-							$"- Profissão do Titular: {this.Titular.Profissao}");
-        }
+            Console.WriteLine($@"
+===== DADOS DA CONTA =====
+- Nº da Conta (Nº Agencia): {this.Conta} ({this.Numero_agencia})
+- Titular da Conta: {this.Titular.Nome} ({this.Titular.Cpf})
+- Saldo Atual: {this.saldo}
+			");
+        }    
 	}
 
 }
